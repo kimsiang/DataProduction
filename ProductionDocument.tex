@@ -54,7 +54,44 @@ The following describes the basic steps in the DAQ production:
 How to insert metadata using FTS, art, etc. What are the metadata we want to insert, etc.
 
 \section{Workflow of the data production: Implementation }
-mock data handling, type of runs, working schedule, deadlines, etc
+
+Once the production team is identified and assembled, the various types of production should be consolidated. The productions fall naturally into categories of simulation and real data, with the later divided into commissioning and runtime productions. 
+
+\begin{itemize}
+
+\item[I] Simulations
+ \begin{itemize}
+ 	\item[i] MDC1 -  uses muon gas gun to produce sample of  $10^{10}$ muons (10$\%$ of muons  be collected in the experiment).
+         \item[ii] MDC2 - uses inflector beam gun to produce sufficient sample size to develop lost muon analyses and study optimal  injection parameters for the kickers and quads. Detailed studies of beam dynamics and average spin effects will need much larger samples (TBD).
+\end{itemize}
+
+\item[II] Data
+\begin{itemize}
+ 	\item[i]  Commissioning
+		\begin{itemize}
+		 \item[-] Mock Fast DAQ -  data taken with no detectors attached. Useful for Q-method studies.
+		 \item[-] Laser - data taken in the months before beam arrives to test calorimeter, laser and DAQ system
+		 \item[-] Magnetic Field DAQ - data taken during commissioning period to exercise DAQ
+		 \item[-] Additional types to be identified ....
+		 \end{itemize}
+         \item[ii] Runtime
+         \begin{itemize}
+		 \item[-] FAST DAQ 
+		 \item[-] Magnetic Field DAQ 		
+		 \item[-] Fiber Harp
+		 \item[-] Additional types to be identified ....
+	\end{itemize}
+\end{itemize}
+
+\end{itemize}
+
+\noindent Within these categories it will likely be necessary to make further distinctions, for example proton runs vs muon runs in the Runtime FAST DAQ category. This list will need to be worked out as the experiment progresses and updated here.\\
+
+\noindent Of the productions listed above the MDC1 and Mock Fast DAQ are the most natural candidates to use for development and testing of the production workflow. The simulation framework in release $v7\_03$ is  production-ready and there are files on dCache from existing Mock Fast DAQ data.  If production tools were in place then job submission could commence immediately.  In  fact small productions, on the order of $\sim$ million events,  have already been produced for MDC1, and the entire SLAC test stand data has been produced.\\
+
+\noindent In order to launch full scale productions the team needs to become proficient with the POMS tool, which will aid in tracking job submission.  The complete set of metadata needs to be defined for SAM (see Section 2 above) and submission scripts need to be written (see Section 4 below).  Eventually the team will also need to take advantage of the resources provided by the Open Science Grid, presumably this is the next step to take once production is running smoothly on FermiGrid.\\
+
+\noindent Considering these tasks   the production team has set the goal of launching, in parallel, MDC1 and Mock DAQ data productions by February 1st.  The full production team is still being assembled and should be complete by the first week in December. The team will be composed of a Production Team Leader, Liang Li,  and four additional members, one which of which will serve as an onsite deputy leader.  The deputy leader, along with three other members will work with the leader to develop the POMS framework, SAM metadata and scripts. Half of the team will focus on the simulation productions (MDC1 to start) and the other half on the data productions (Mock DAQ).      
 
 \section{Versioning of the scripts/codes (related to releases)}
 
