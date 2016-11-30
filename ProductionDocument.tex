@@ -95,6 +95,10 @@ Once the production team is identified and assembled, the various types of produ
 
 \section{Versioning of the scripts/codes (related to releases)}
 
+\noindent Production runs code from a release from CVMFS. The release identifier (e.g. {\tt v7\_03\_00} must be stored in the SAM metadata for the produced files as application version). If a problem with a release is found during production, then release management is consulted and an emergency release may be made and uploaded to CVMFS. Out-of-band code should never be run in production. \\
+
+\noindent Production scripts and the top level FCL files may be submitted with the job instead of pulled from CVMFS. This mechanism may be advantageous as these files may need to be updated at a faster rate than uploading to CVMFS can provide, especially in early phases of production. To accommodate this situation, a {\tt gm2production} git repository may be set up to manage the scripts and top level FCL files. Scripts and FCL files that are actually run for production must be committed to git and pushed to Redmine. The git hash of the commit should be recorded in the SAM metadata for files produced. Eventually, when things are stable, {\tt gm2production} should be released to CVMFS and necessary files pulled from there. 
+
 \section{POMS: What do we know so far}
 Reference slides:
 
