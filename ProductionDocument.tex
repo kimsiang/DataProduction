@@ -54,13 +54,121 @@ The following describes the basic steps in the DAQ production:
 How to insert metadata using FTS, art, etc. What are the metadata we want to insert, etc.
 
 \section{Workflow of the data production: Implementation }
-mock data handling, type of runs, working schedule, deadlines, etc
+
+Once the production team is identified and assembled, the various types of production should be consolidated. The productions fall naturally into categories of simulation and real data, with the later divided into commissioning and runtime productions. 
+
+\begin{itemize}
+
+\item[I] Simulations
+ \begin{itemize}
+ 	\item[i] MDC1 -  uses muon gas gun to produce sample of  $10^{10}$ muons (10$\%$ of muons  be collected in the experiment).
+         \item[ii] MDC2 - uses inflector beam gun to produce sufficient sample size to develop lost muon analyses and study optimal  injection parameters for the kickers and quads. Detailed studies of beam dynamics and average spin effects will need much larger samples (TBD).
+\end{itemize}
+
+\item[II] Data
+\begin{itemize}
+ 	\item[i]  Commissioning
+		\begin{itemize}
+		 \item[-] Mock Fast DAQ -  data taken with no detectors attached. Useful for Q-method studies.
+		 \item[-] Laser - data taken in the months before beam arrives to test calorimeter, laser and DAQ system
+		 \item[-] Magnetic Field DAQ - data taken during commissioning period to exercise DAQ
+		 \item[-] Additional types to be identified ....
+		 \end{itemize}
+         \item[ii] Runtime
+         \begin{itemize}
+		 \item[-] FAST DAQ 
+		 \item[-] Magnetic Field DAQ 		
+		 \item[-] Fiber Harp
+		 \item[-] Additional types to be identified ....
+	\end{itemize}
+\end{itemize}
+
+\end{itemize}
+
+\noindent Within these categories it will likely be necessary to make further distinctions, for example proton runs vs muon runs in the Runtime FAST DAQ category. This list will need to be worked out as the experiment progresses and updated here.\\
+
+\noindent Of the productions listed above the MDC1 and Mock Fast DAQ are the most natural candidates to use for development and testing of the production workflow. The simulation framework in release $v7\_03$ is  production-ready and there are files on dCache from existing Mock Fast DAQ data.  If production tools were in place then job submission could commence immediately.  In  fact small productions, on the order of $\sim$ million events,  have already been produced for MDC1, and the entire SLAC test stand data has been produced.\\
+
+\noindent In order to launch full scale productions the team needs to become proficient with the POMS tool, which will aid in tracking job submission.  The complete set of metadata needs to be defined for SAM (see Section 2 above) and submission scripts need to be written (see Section 4 below).  Eventually the team will also need to take advantage of the resources provided by the Open Science Grid, presumably this is the next step to take once production is running smoothly on FermiGrid.\\
+
+\noindent Considering these tasks   the production team has set the goal of launching, in parallel, MDC1 and Mock DAQ data productions by February 1st.  The full production team is still being assembled and should be complete by the first week in December. The team will be composed of a Production Team Leader, Liang Li,  and four additional members, one which of which will serve as an onsite deputy leader.  The deputy leader, along with three other members will work with the leader to develop the POMS framework, SAM metadata and scripts. Half of the team will focus on the simulation productions (MDC1 to start) and the other half on the data productions (Mock DAQ).      
 
 \section{Versioning of the scripts/codes (related to releases)}
 
-\section{POMS: What do we know so far}
-Reference slides:
+\noindent Production runs code from a release from CVMFS. The release identifier (e.g. {\tt v7\_03\_00} must be stored in the SAM metadata for the produced files as application version). If a problem with a release is found during production, then release management is consulted and an emergency release may be made and uploaded to CVMFS. Out-of-band code should never be run in production. \\
 
-\url{https://indico.fnal.gov/getFile.py/access?contribId=8&resId=0&materialId=slides&confId=12120}
+\noindent Production scripts and the top level FCL files may be submitted with the job instead of pulled from CVMFS. This mechanism may be advantageous as these files may need to be updated at a faster rate than uploading to CVMFS can provide, especially in early phases of production. To accommodate this situation, a {\tt gm2production} git repository may be set up to manage the scripts and top level FCL files. Scripts and FCL files that are actually run for production must be committed to git and pushed to Redmine. The git hash of the commit should be recorded in the SAM metadata for files produced. Eventually, when things are stable, {\tt gm2production} should be released to CVMFS and necessary files pulled from there. 
+
+\section{POMS: What do we know so far}
+
+The production team plans to use POMS to submit and track jobs and production campaigns. In order to use POMS you must be added  as a g-2 user.  Please contact the current production leaders if you are part of the production team and need to become a user.  You must also have a .k5login script in your home directory on the FNAL virtual machines. If you don't already have a .k5login file create one and include both your ({\it{user.principal}}@FNAL.GOV) and POMS' kerberos principal ( poms/cd/pomsgpvm01.fnal.gov@FNAL.GOV) on separate lines.  A good introduction to the POMS system  can be found at this link:
+
+\begin{center}
+{\footnotesize
+\url{https://indico.fnal.gov/getFile.py/access?contribId=8&resId=0&materialId=slides&confId=12120}}
+\end{center}
+
+\noindent A snapshot of the POMS web interface is shown in Fig~\ref{fig:POMSSnapshot}. Three levels of settings must be configured in order to launch a production campaign: {\it{launch template}}, {\it{job type}}, and {\it{campaign layer}}. They can be accessed from the left panel under the \textbf{Campaign Layers} as shown in Fig~\ref{fig:POMSSnapshot}.\\
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{pics/POMSSnapshot.pdf} 
+\caption{A snapshot of the POMS web interface.}\label{fig:POMSSnapshot}
+\end{figure}
+
+\noindent The {\it{launch template}} provides all the commands that POMS will need to setup the correct environment in your directory. Click on the {\it{launch template} }button and then select {\it{gm2}} under the {\it{choose experiment}} pull down menu. You should be able to see (and edit - but please don't) existing templates made by other users.  Refer to the MD0$\_$template as an example. To create your own template click the green {\bf{Add}} button at the bottom of the page. In the pop-up window that appears fill in the following fields:
+
+\begin{enumerate}
+\item[]{\bf{Name}} This is a descriptive name for your template. Launch templates can be used with several different job templates so make these names as general as possible.  Including the release version in the title is a good idea.
+\item[]{\bf{Host}} This is the virtual machine you will launch your jobs from, for example {\it gm2gpvm02}.
+\item[]{\bf{Account}} This is the name of your account on the virtual machines  where you will launch jobs. 
+\item[]{\bf{Setup}} This field contains every single command you need to setup your environment and maneuver to the correct directory from which you will launch your jobs. Commands should not be separated by newlines (returns) but instead by semi-colons.
+\end{enumerate}
+
+\noindent Once you have filled in the template press Submit to exit. You may return to edit the template by clicking not the leftmost icon next to your template name in the list.\\
+
+
+\noindent  The {\it job type} template holds the job submission command. Refer to MDC0$\_$template as an example. To create your own template click the green {\bf Add} button at the bottom of the page. In the pop-up window that appears fill in the following fields:
+
+\begin{enumerate}
+\item[]{\bf{Name}} This is a descriptive name for your template.  Job templates can be used with several different launch templates so make these names as general as possible.  Including the job fcl in the title is a good idea.
+\item[]{\bf{Input Files Per Job}}  It is not clear how important this field is or if POMS even uses the information. The fcl is considered an input file so it is always appropriate enter one in this field. 
+\item[]{\bf{Output Files Per Job}} The number of output files from this job. It is not clear how important this field is or if POMS uses the information.
+\item[]{\bf{Output File Patterns}} This field denotes the output file format. It is not clear how important this field is or if POMS uses the information.
+\item[]{\bf{Launch Script}} Input the full path to the submission script. 
+\item[]{\bf{Definition Parameters}} Enter inputs to the script.
+\item[]{\bf{Recovery Launches}} Leave blank. g-2 is not currently using the recovery functionality.
+\end{enumerate}
+
+\noindent Once you have filled in the template press Submit to exit. You may return to edit the template by clicking not the leftmost icon next to your template name in the list.\\
+
+\noindent The {\it {compose campaign layers template}}  associates a specific {\it {launch template}} and a  {\it {job template}} and provides the hook you will use to launch jobs. To create your own template click the green {\bf Add} button at the bottom of the page. In the pop-up window that appears fill in the following fields:
+
+\begin{enumerate}
+\item[]{\bf{Name}} This is a descriptive name for your template. Including a short descriptor of the ultimate physics goal in the title is a good idea.
+\item[]{\bf{VO Role}} Enter ``production"
+\item[]{\bf{State}} Pull down ``Active" if this production is ongoing. If the campaign is over switch to ``Inactive".
+\item[]{\bf{Software version}} Enter the release version for this production
+\item[]{\bf{Dataset}} Enter a description of the dataset you are running
+\item[]{\bf{Dataset Split Type}} Enter ``mod(25)"
+\item[]{\bf{Completion Type}}  This field is not required. It is not clear at this time the difference between ``Complete" and ``Located".
+\item[]{\bf{Completion Pct}} This field is not required. It is not clear at this time how POMS uses the completion $\%$.
+\item[]{\bf{Parameter Overrides}} Leave empty
+\item[]{\bf{Depends On}} Leave empty
+\item[]{\bf{Launch Template}} Choose from available g-2 {\it {launch templates}}
+\item[]{\bf{Job Type}} Choose from available g-2 {\it {job type templates}}
+\end{enumerate}
+
+\noindent Once you have filled in the template press Submit to exit. You may return to edit the template by clicking not the leftmost icon next to your template name in the list.\\
+
+\noindent Once you have filled out the  {\it{launch template}}, {\it{job type}}, and {\it{campaign layer}} click on the {\it{Active for gm2}}  tab and click on the Name of the {\it{Campaign Layer}] you would like to launch. When you click on the {\it{Launch Campaign Jobs Now}} tab POMS will attempt to submit the job through your account. The pop-up screen will show you the submission response so you can evaluate of the submission was successful. If the job were not successfully launched then you need to debug your templates. A good way to do this is to copy and paste the commands from the template in your home directory, modifying and updating your templates as you debug the problems.  
+
+\noindent Additional documentation by the POMS group is being developed here : 
+\begin{center}
+{\footnotesize
+\url https://cdcvs.fnal.gov/redmine/projects/prod$\_$mgmt$\_$db/wiki/How$\_$to$\_$use$\_$POMS}
+\end{center}
+
+
 
 \end{document}
