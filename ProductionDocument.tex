@@ -101,8 +101,73 @@ Once the production team is identified and assembled, the various types of produ
 
 \section{POMS: What do we know so far}
 
-Reference slides:
-\url{https://indico.fnal.gov/getFile.py/access?contribId=8&resId=0&materialId=slides&confId=12120}
+The production team plans to use POMS to submit and track jobs and production campaigns. In order to use POMS you must be added  as a g-2 user.  Please contact the current production leaders if you are part of the production team and need to become a user.  You must also have a .k5login script in your home directory on the FNAL virtual machines. If you don't already have a .k5login file create one and include both your ({\it{user.principal}}@FNAL.GOV) and POMS' kerberos principal ( poms/cd/pomsgpvm01.fnal.gov@FNAL.GOV) on separate lines.  A good introduction to the POMS system  can be found at this link:
+
+\begin{center}
+{\footnotesize
+\url{https://indico.fnal.gov/getFile.py/access?contribId=8&resId=0&materialId=slides&confId=12120}}
+\end{center}
+
+\noindent A snapshot of the POMS web interface is shown in Fig~\ref{fig:POMSSnapshot}. Three levels of settings must be configured in order to launch a production campaign: {\it{launch template}}, {\it{job type}}, and {\it{campaign layer}}. They can be accessed from the left panel under the \textbf{Campaign Layers} as shown in Fig~\ref{fig:POMSSnapshot}.\\
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{pics/POMSSnapshot.pdf} 
+\caption{A snapshot of the POMS web interface.}\label{fig:POMSSnapshot}
+\end{figure}
+
+\noindent The {\it{launch template}} provides all the commands that POMS will need to setup the correct environment in your directory. Click on the {\it{launch template} }button and then select {\it{gm2}} under the {\it{choose experiment}} pull down menu. You should be able to see (and edit - but please don't) existing templates made by other users.  Refer to the MD0$\_$template as an example. To create your own template click the green {\bf{Add}} button at the bottom of the page. In the pop-up window that appears fill in the following fields:
+
+\begin{enumerate}
+\item[]{\bf{Name}} This is a descriptive name for your template. Launch templates can be used with several different job templates so make these names as general as possible.  Including the release version in the title is a good idea.
+\item[]{\bf{Host}} This is the virtual machine you will launch your jobs from, for example {\it gm2gpvm02}.
+\item[]{\bf{Account}} This is the name of your account on the virtual machines  where you will launch jobs. 
+\item[]{\bf{Setup}} This field contains every single command you need to setup your environment and maneuver to the correct directory from which you will launch your jobs. Commands should not be separated by newlines (returns) but instead by semi-colons.
+\end{enumerate}
+
+\noindent Once you have filled in the template press Submit to exit. You may return to edit the template by clicking not the leftmost icon next to your template name in the list.\\
+
+
+\noindent  The {\it job type} template holds the job submission command. Refer to MDC0$\_$template as an example. To create your own template click the green {\bf Add} button at the bottom of the page. In the pop-up window that appears fill in the following fields:
+
+\begin{enumerate}
+\item[]{\bf{Name}} This is a descriptive name for your template.  Job templates can be used with several different launch templates so make these names as general as possible.  Including the job fcl in the title is a good idea.
+\item[]{\bf{Input Files Per Job}}  It is not clear how important this field is or if POMS even uses the information. The fcl is considered an input file so it is always appropriate enter one in this field. 
+\item[]{\bf{Output Files Per Job}} The number of output files from this job. It is not clear how important this field is or if POMS uses the information.
+\item[]{\bf{Output File Patterns}} This field denotes the output file format. It is not clear how important this field is or if POMS uses the information.
+\item[]{\bf{Launch Script}} Input the full path to the submission script. 
+\item[]{\bf{Definition Parameters}} Enter inputs to the script.
+\item[]{\bf{Recovery Launches}} Leave blank. g-2 is not currently using the recovery functionality.
+\end{enumerate}
+
+\noindent Once you have filled in the template press Submit to exit. You may return to edit the template by clicking not the leftmost icon next to your template name in the list.\\
+
+\noindent The {\it {compose campaign layers template}}  associates a specific {\it {launch template}} and a  {\it {job template}} and provides the hook you will use to launch jobs. To create your own template click the green {\bf Add} button at the bottom of the page. In the pop-up window that appears fill in the following fields:
+
+\begin{enumerate}
+\item[]{\bf{Name}} This is a descriptive name for your template. Including a short descriptor of the ultimate physics goal in the title is a good idea.
+\item[]{\bf{VO Role}} Enter ``production"
+\item[]{\bf{State}} Pull down ``Active" if this production is ongoing. If the campaign is over switch to ``Inactive".
+\item[]{\bf{Software version}} Enter the release version for this production
+\item[]{\bf{Dataset}} Enter a description of the dataset you are running
+\item[]{\bf{Dataset Split Type}} Enter ``mod(25)"
+\item[]{\bf{Completion Type}}  This field is not required. It is not clear at this time the difference between ``Complete" and ``Located".
+\item[]{\bf{Completion Pct}} This field is not required. It is not clear at this time how POMS uses the completion $\%$.
+\item[]{\bf{Parameter Overrides}} Leave empty
+\item[]{\bf{Depends On}} Leave empty
+\item[]{\bf{Launch Template}} Choose from available g-2 {\it {launch templates}}
+\item[]{\bf{Job Type}} Choose from available g-2 {\it {job type templates}}
+\end{enumerate}
+
+\noindent Once you have filled in the template press Submit to exit. You may return to edit the template by clicking not the leftmost icon next to your template name in the list.\\
+
+\noindent Once you have filled out the  {\it{launch template}}, {\it{job type}}, and {\it{campaign layer}} click on the {\it{Active for gm2}}  tab and click on the Name of the {\it{Campaign Layer}} you would like to launch. When you click on the {\it{Launch Campaign Jobs Now}} tab POMS will attempt to submit the job through your account. The pop-up screen will show you the submission response so you can evaluate of the submission was successful. If the job were not successfully launched then you need to debug your templates. A good way to do this is to copy and paste the commands from the template in your home directory, modifying and updating your templates as you debug the problems.  
+
+\noindent Additional documentation by the POMS group is being developed here : 
+\begin{center}
+{\footnotesize
+\url{https://cdcvs.fnal.gov/redmine/projects/prod_mgmt_db/wiki/How_to_use_POMS}}
+\end{center}
 
 A snapshot of the POMS web interface is shown in Fig~\ref{fig:POMSSnapshot}. There are 3 levels of setting to be configured to launch a production campaign: launch template, job type, and campaign layer. They can be accessed from the left panel under the \textbf{Campaign Layers} as shown in Fig~\ref{fig:POMSSnapshot}.
 
