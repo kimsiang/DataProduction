@@ -169,4 +169,79 @@ The production team plans to use POMS to submit and track jobs and production ca
 \url{https://cdcvs.fnal.gov/redmine/projects/prod_mgmt_db/wiki/How_to_use_POMS}}
 \end{center}
 
+\appendix
+
+\section{Introduction to FIFE tools}
+
+This section serves as a summary of the detailed explanation given in \url{https://cdcvs.fnal.gov/redmine/projects/fife/wiki/Introduction_to_FIFE_and_Component_Services} regarding the tools provided by Fermilab for offline computing.
+
+
+\subsection{What is FIFE?}
+
+FabrIc for Frontier Experiments (FIFE) is the central tools and services provided by Fermilab to address common challenges in offline computing. FIFE is developed based on the collective experience from current and past experiments to provide options for designing offline computing for experiments like Muon g-2. FIFE is modular so experiments can take what they need, and new tools from outside communities can be incorporated as they develop.
+
+\subsection{Jobsub}
+
+Jobsub (Job Submission) is a suite of tools to manage batch/grid submission. These tools are designed to simplify the job submission process by:
+\begin{itemize}
+\item Defining common interfaces for experiments
+\item Integrating complex grid tools in a sensible manner
+\item Protecting shared resources from overload
+\end{itemize}
+
+\noindent
+A commonly used command for submitting a job is as the following:
+\begin{verbatim}
+jobsub_submit -G gm2 -N ${NJOBS} -M --OS=SL6 \
+--resource-provides=usage_model=DEDICATED,OPPORTUNISTIC \
+--role=Analysis --dataset_definition=${SAM_DATASET_NAME} \
+file://$PWD/submit-localrelease.sh ${MAINFCLNAME} ${USER} ${SCRATCH_DIR} 
+\end{verbatim}
+%
+Notice that the experiment name (gm2), role (Analysis or Production) and so has to be specified to successfully submit a job. To check the progress of your jobs,
+%
+\begin{verbatim}
+jobsub_q -G gm2 --user=${USERNAME}
+\end{verbatim}
+
+
+
+\subsection{IF Data Handling Client Tools (ifdhc)}
+
+IFDH (Intensity Frontier Data Handling), is a suite of tools for data movement tasks for Fermilab experiments. IFDH encompasses moving input data from caches or storage elements to compute nodes (the "last mile" of data movement) and moving output data potentially to those caches as part of the journey back to the user.
+
+IFDH is:
+\begin{itemize}
+\item easy to use.
+\item does 'The Right Things' for data transfer, and avoids things that cause phone calls stating,"Your jobs are hanging the BlueArc."
+\item changes with the updated environment so users don't have to keep changing scripts. (For example, when the new UberCache replaces dCache, it will be supported automatically in ifdh, and related command.)
+\item can be called from python scripts, plain C++ code, and art framework code.
+\end{itemize}
+
+To copy a data file stored in the pnfs area to a local area, simply type
+
+\begin{verbatim}
+ifdh cp /pnfs/GM2/mdc/mdc0/gm2ringsim.root /gm2/app/users/XXX/mydata/
+\end{verbatim}
+
+Notice that the typical UNIX command for copy (cp) will work but it is not safe and your file might be corrupted.
+
+\subsection{SAM}
+Sequential Access via Metadata (SAM) is a data handling system organized as a set of servers which work together to store and retrieve files and associated metadata, including a complete record of the processing which has used the files.
+
+As much as possible, SAM frees experiments from dealing with the specific details of their data so they can focus on the content rather than the technicalities. SAM provides:
+\begin{itemize}
+\item metadata catalogue — What’s in the data files?
+\item location catalogue - Where are my files?
+\item data delivery service - Give me my files.
+\end{itemize}
+
+There are several summary talks regarding SAM given in our simulation meeting and collaboration meeting.
+\begin{itemize}
+\item NOvA SAM submission scripts review by L. Li 
+(\url{http://gm2-docdb.fnal.gov:8080/cgi-bin/ShowDocument?docid=3550})
+\item SAM Review by L. Welty-Rieger (\url{http://gm2-docdb.fnal.gov:8080/cgi-bin/ShowDocument?docid=3415})
+\item Simulation Status and Data Handling with SAM by L. Welty-Rieger (\url{http://gm2-docdb.fnal.gov:8080/cgi-bin/ShowDocument?docid=3142)}
+\end{itemize}
+
 \end{document}
