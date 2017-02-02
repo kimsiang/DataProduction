@@ -191,18 +191,18 @@ Jobsub (Job Submission) is a suite of tools to manage batch/grid submission. The
 
 \noindent
 A commonly used command for submitting a job is as the following:
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 jobsub_submit -G gm2 -N ${NJOBS} -M --OS=SL6 \
 --resource-provides=usage_model=DEDICATED,OPPORTUNISTIC \
 --role=Analysis --dataset_definition=${SAM_DATASET_NAME} \
 file://$PWD/submit-localrelease.sh ${MAINFCLNAME} ${USER} ${SCRATCH_DIR} 
-\end{verbatim}
+\end{Verbatim}
 %
 Notice that the experiment name (gm2), role (Analysis or Production) and so has to be specified to successfully submit a job. To check the progress of your jobs,
 %
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 jobsub_q -G gm2 --user=${USERNAME}
-\end{verbatim}
+\end{Verbatim}
 
 
 
@@ -220,9 +220,9 @@ IFDH is:
 
 To copy a data file stored in the pnfs area to a local area, simply type
 
-\begin{verbatim}
+\begin{Verbatim}[frame=single]
 ifdh cp /pnfs/GM2/mdc/mdc0/gm2ringsim.root /gm2/app/users/XXX/mydata/
-\end{verbatim}
+\end{Verbatim}
 
 Notice that the typical UNIX command for copy (cp) will work but it is not safe and your file might be corrupted.
 
